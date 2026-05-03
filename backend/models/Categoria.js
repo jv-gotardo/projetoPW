@@ -10,7 +10,9 @@ const Categoria = sequelize.define('Categoria', {
         type: DataTypes.STRING
     }
 }, {
-    tableName: 'categorias'
+    tableName: 'categorias',
+    underscored: true,
+    timestamps: true
 });
 
 module.exports = Categoria;

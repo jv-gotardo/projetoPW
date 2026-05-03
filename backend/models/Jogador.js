@@ -11,7 +11,9 @@ const Jogador = sequelize.define('Jogador', {
         type: DataTypes.INTEGER
     }
 }, {
-    tableName: 'jogadores'
+    tableName: 'jogadores',
+    underscored: true,
+    timestamps: true    
 });
 
 // Relacionamento: Categoria tem muitos jogadores

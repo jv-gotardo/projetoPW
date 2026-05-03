@@ -4,13 +4,16 @@ const Jogador = require('./Jogador');
 
 const Partida = sequelize.define('Partida', {
     data: {
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
+        field: 'data'
     },
     local: {
         type: DataTypes.STRING
     }
 }, {
-    tableName: 'partidas'
+    tableName: 'partidas',
+    underscored: true,
+    timestamps: true
 });
 
 // Relacionamentos:
