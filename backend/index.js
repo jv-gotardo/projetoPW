@@ -12,8 +12,9 @@ app.use(express.json());
 app.use(cors());       
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Rodando na porta ${PORT}`);
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
 
 const CategoriaController = require('./controllers/CategoriaController');
