@@ -10,10 +10,17 @@ const sequelize = new Sequelize(
         port: process.env.DB_PORT,
         dialect: 'postgres',
         dialectOptions: {
+            connectTimeout: 60000,
             ssl: {
                 require: true,
                 rejectUnauthorized: false 
             }
+        },
+        pool: {
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
         },
         logging: false
     }
