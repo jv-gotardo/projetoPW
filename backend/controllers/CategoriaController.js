@@ -7,7 +7,7 @@ module.exports = {
             const novaCategoria = await Categoria.create({ nome, nivel });
             return res.status(201).json(novaCategoria);
         } catch (error) {
-            console.error("ERRO REAL:", error); // Isso vai mostrar no seu terminal o motivo exato
+            console.error("ERRO REAL:", error); 
             return res.status(500).json({ erro: error.message });
         }
     },

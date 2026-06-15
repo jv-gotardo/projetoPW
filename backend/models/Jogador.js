@@ -16,7 +16,6 @@ const Jogador = sequelize.define('Jogador', {
     timestamps: true    
 });
 
-// Relacionamento: Categoria tem muitos jogadores
 Categoria.hasMany(Jogador, { foreignKey: 'categoria_id' });
 Jogador.belongsTo(Categoria, { foreignKey: 'categoria_id' });
 

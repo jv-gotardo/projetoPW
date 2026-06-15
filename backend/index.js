@@ -5,6 +5,7 @@ const sequelize = require('./database/connection.js');
 const Categoria = require('./models/Categoria');
 const Jogador = require('./models/Jogador');
 const Partida = require('./models/Partida');
+const User = require('./models/Usuario');
 
 const app = express();
 
@@ -13,9 +14,8 @@ app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+const UsuarioController = require('./controllers/UsuarioController');
+app.post('/auth/register', UsuarioController.criar);
 
 const CategoriaController = require('./controllers/CategoriaController');
 
