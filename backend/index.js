@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 3000;
 
 const UsuarioController = require('./controllers/UsuarioController');
 app.post('/auth/register', UsuarioController.criar);
+app.post('/auth/login', UsuarioController.login);
 
 const CategoriaController = require('./controllers/CategoriaController');
 

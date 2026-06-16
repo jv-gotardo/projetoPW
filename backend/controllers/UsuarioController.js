@@ -35,6 +35,46 @@ const UsuarioController = {
       console.error(error);
       return res.status(500).json({ erro: 'Erro interno ao criar usuário.' });
     }
+  },
+
+  async login(req, res) {
+    try {
+      const { email, senha } = req.body;
+
+      if (!email || !senha) {
+        return res.status(400).json({ erro: 'E-mail e senha são obrigatórios.' });
+      }
+
+      const usuario = await Usuario.findOne({ where: { email } });
+      if (!usuario) {
+        return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
+      }
+
+      const senhaValida = await bcrypt.compare(senha, usuario.senha);
+      if (!senhaValida) {
+        return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
+      }
+
+      const token = jwt.sign(
+        { id: usuario.id, role: usuario.role },
+        process.env.JWT_SECRET || 'fallback_secret_local',
+        { expiresIn: '1d' }
+      );
+
+      return res.status(200).json({
+        token,
+        usuario: {
+          id: usuario.id,
+          nome: usuario.nome,
+          email: usuario.email,
+          role: usuario.role
+        }
+      });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ erro: 'Erro interno ao realizar login.' });
+    }
   }
 };
 
