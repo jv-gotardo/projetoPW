@@ -1,7 +1,7 @@
-import { Navbar, Container, Nav, Form } from 'react-bootstrap'; 
+import { Navbar, Container, Nav, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-function Menu({ isAdmin, setIsAdmin }) {
+function Menu({ isAdmin, handleLogout }) { 
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
       <Container>
@@ -12,16 +12,22 @@ function Menu({ isAdmin, setIsAdmin }) {
             <Nav.Link as={Link} to="/categorias">Categorias</Nav.Link>
             <Nav.Link as={Link} to="/jogadores">Jogadores</Nav.Link>
             <Nav.Link as={Link} to="/partidas">Partidas</Nav.Link>
+            <Nav.Link as={Link} to="/perfil">Meus Dados</Nav.Link>
           </Nav>
           
-          <Form.Check 
-            type="switch"
-            id="custom-switch"
-            label={isAdmin ? "Modo ADM" : "Modo Usuário"}
-            className="text-white"
-            checked={isAdmin}
-            onChange={() => setIsAdmin(!isAdmin)}
-          />
+          <Nav className="align-items-center me-3">
+            <span className="text-white">
+              Perfil: {isAdmin ? (
+                <Badge bg="danger" className="ms-2">Administrador</Badge>
+              ) : (
+                <Badge bg="secondary" className="ms-2">Usuário</Badge>
+              )}
+            </span>
+          </Nav>
+
+          <button className="btn btn-sm btn-outline-light" onClick={handleLogout}>
+            Sair
+          </button>
         </Navbar.Collapse>
       </Container>
     </Navbar>

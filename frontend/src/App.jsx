@@ -7,6 +7,7 @@ import ListarJogadores from './pages/ListarJogadores';
 import ListarPartidas from './pages/ListarPartidas';
 import Home from './pages/Home';
 import api from './services/api';
+import Perfil from './pages/Perfil';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -44,13 +45,37 @@ function App() {
     setIsAdmin(false);
   };
 
-  if (!token) {
+if (!token) {
+  if (cadastrando) {
+    const handleCadastro = async (e) => {
+      e.preventDefault();
+      setErroLogin('');
+      try {
+        await api.post('/auth/register', { nome, email, senha });
+        alert('Conta criada com sucesso! Faça o seu login.');
+        
+        setCadastrando(false);
+      } catch (err) {
+        setErroLogin(err.response?.data?.erro || 'Erro ao realizar cadastro.');
+      }
+    };
+
     return (
       <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
         <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
-          <h3 className="text-center mb-4">Ranking Tênis - Login</h3>
+          <h3 className="text-center mb-4">Torneio TM - Criar Conta</h3>
           {erroLogin && <div className="alert alert-danger">{erroLogin}</div>}
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleCadastro}>
+            <div className="mb-3">
+              <label className="form-label">Nome Completo</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                value={nome} 
+                onChange={(e) => setNome(e.target.value)} 
+                required 
+              />
+            </div>
             <div className="mb-3">
               <label className="form-label">E-mail</label>
               <input 
@@ -71,7 +96,12 @@ function App() {
                 required 
               />
             </div>
-            <button type="submit" className="btn btn-primary w-100">Entrar</button>
+            <button type="submit" className="btn btn-success w-100 mb-3">Cadastrar</button>
+            <div className="text-center">
+              <button type="button" className="btn btn-link p-0 text-decoration-none" onClick={() => { setCadastrando(false); setErroLogin(''); }}>
+                Já tem uma conta? Voltar para o Login
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -79,25 +109,58 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Menu isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
-      
-      <div className="container mt-4">
-        <div className="d-flex justify-content-end mb-3">
-          <button className="btn btn-sm btn-outline-danger" onClick={handleLogout}>
-            Sair do Sistema
-          </button>
-        </div>
-
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/categorias" element={<ListarCategorias isAdmin={isAdmin} />} />
-          <Route path="/jogadores" element={<ListarJogadores isAdmin={isAdmin} />} />
-          <Route path="/partidas" element={<ListarPartidas isAdmin={isAdmin} />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+      <div className="card p-4 shadow" style={{ width: '100%', maxWidth: '400px' }}>
+        <h3 className="text-center mb-4">Torneio TM - Login</h3>
+        {erroLogin && <div className="alert alert-danger">{erroLogin}</div>}
+        <form onSubmit={handleLogin}>
+          <div className="mb-3">
+            <label className="form-label">E-mail</label>
+            <input 
+              type="email" 
+              className="form-control" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              required 
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Senha</label>
+            <input 
+              type="password" 
+              className="form-control" 
+              value={senha} 
+              onChange={(e) => setSenha(e.target.value)} 
+              required 
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100 mb-3">Entrar</button>
+          <div className="text-center">
+            <button type="button" className="btn btn-link p-0 text-decoration-none" onClick={() => { setCadastrando(true); setErroLogin(''); }}>
+              Não tem uma conta? Cadastre-se aqui
+            </button>
+          </div>
+        </form>
       </div>
-    </BrowserRouter>
+    </div>
+  );
+}
+
+return (
+  <BrowserRouter>
+    <Menu isAdmin={isAdmin} handleLogout={handleLogout} />
+    
+    <div className="container mt-4">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/categorias" element={<ListarCategorias isAdmin={isAdmin} />} />
+        <Route path="/jogadores" element={<ListarJogadores isAdmin={isAdmin} />} />
+        <Route path="/partidas" element={<ListarPartidas isAdmin={isAdmin} />} />
+        <Route path="/perfil" element={<Perfil />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </div>
+  </BrowserRouter>
   );
 }
 

@@ -8,7 +8,7 @@ const Partida = require('./models/Partida');
 const User = require('./models/Usuario');
 const authMiddleware = require('./middlewares/authMiddleware');
 
-const app = express();
+const app = WebCheck || express(); 
 
 app.use(express.json());
 app.use(cors());       
@@ -18,6 +18,8 @@ const PORT = process.env.PORT || 3000;
 const UsuarioController = require('./controllers/UsuarioController');
 app.post('/auth/register', UsuarioController.criar); 
 app.post('/auth/login', UsuarioController.login);
+app.get('/usuarios/perfil', authMiddleware, UsuarioController.obterPerfil);
+app.put('/usuarios/perfil', authMiddleware, UsuarioController.atualizarPerfil);
 
 const CategoriaController = require('./controllers/CategoriaController');
 

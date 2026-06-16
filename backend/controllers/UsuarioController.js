@@ -76,6 +76,60 @@ const UsuarioController = {
       console.error(error);
       return res.status(500).json({ erro: 'Erro interno ao realizar login.' });
     }
+  },
+
+  async obterPerfil(req, res) {
+    try {
+      const { id } = req.usuario; 
+
+      const usuario = await Usuario.findByPk(id, {
+        attributes: ['id', 'nome', 'email', 'role']
+      });
+
+      if (!usuario) {
+        return res.status(404).json({ erro: 'Usuário não encontrado.' });
+      }
+
+      return res.status(200).json(usuario);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ erro: 'Erro interno ao obter dados do perfil.' });
+    }
+  },
+
+  async atualizarPerfil(req, res) {
+    try {
+      const { id } = req.usuario; 
+      const { nome, email, senha } = req.body;
+
+      const usuario = await Usuario.findByPk(id);
+      if (!usuario) {
+        return res.status(404).json({ erro: 'Usuário não encontrado.' });
+      }
+
+      if (nome) usuario.nome = nome;
+      if (email) usuario.email = email;
+
+      if (senha) {
+        const salt = await bcrypt.genSalt(10);
+        usuario.senha = await bcrypt.hash(senha, salt);
+      }
+
+      await usuario.save();
+
+      return res.status(200).json({
+        mensagem: 'Perfil atualizado com sucesso!',
+        usuario: {
+          id: usuario.id,
+          nome: usuario.nome,
+          email: usuario.email,
+          role: usuario.role
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ erro: 'Erro interno ao atualizar perfil.' });
+    }
   }
 };
 
