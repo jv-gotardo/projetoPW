@@ -1,33 +1,33 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/Usuario');
+const Usuario = require('../models/Usuario');
 
 const UsuarioController = {
   async criar(req, res) {
     try {
-      const { name, email, password } = req.body;
+      const { nome, email, senha, role } = req.body;
 
-      if (!name || !email || !password) {
-        return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
+      if (!nome || !email || !senha) {
+        return res.status(400).json({ erro: 'Nome, e-mail e senha são obrigatórios.' });
       }
 
-      const userExists = await User.findOne({ where: { email } });
-      if (userExists) {
+      const usuarioExiste = await Usuario.findOne({ where: { email } });
+      if (usuarioExiste) {
         return res.status(400).json({ erro: 'E-mail já cadastrado.' });
       }
 
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const senhaCriptografada = await bcrypt.hash(senha, salt);
 
-      const novoUsuario = await User.create({
-        name,
+      const novoUsuario = await Usuario.create({
+        nome,
         email,
-        password: hashedPassword,
-        role: 'user'
+        senha: senhaCriptografada,
+        role: role || 'user'
       });
 
       return res.status(201).json({
         id: novoUsuario.id,
-        name: novoUsuario.name,
+        nome: novoUsuario.nome,
         email: novoUsuario.email,
         role: novoUsuario.role
       });
