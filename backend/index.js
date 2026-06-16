@@ -6,6 +6,7 @@ const Categoria = require('./models/Categoria');
 const Jogador = require('./models/Jogador');
 const Partida = require('./models/Partida');
 const User = require('./models/Usuario');
+const authMiddleware = require('./middlewares/authMiddleware');
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 
 const UsuarioController = require('./controllers/UsuarioController');
-app.post('/auth/register', UsuarioController.criar);
+app.post('/auth/register', UsuarioController.criar); 
 app.post('/auth/login', UsuarioController.login);
 
 const CategoriaController = require('./controllers/CategoriaController');
@@ -23,21 +24,21 @@ const CategoriaController = require('./controllers/CategoriaController');
 app.post('/categorias', CategoriaController.criar);       
 app.get('/categorias', CategoriaController.listar);        
 app.put('/categorias/:id', CategoriaController.atualizar); 
-app.delete('/categorias/:id', CategoriaController.excluir); 
+app.delete('/categorias/:id', CategoriaController.excluir);
 
 const JogadorController = require('./controllers/JogadorController');
 
-app.post('/jogadores', JogadorController.criar);
-app.get('/jogadores', JogadorController.listar);
-app.put('/jogadores/:id', JogadorController.atualizar);
-app.delete('/jogadores/:id', JogadorController.excluir);
+app.post('/jogadores', authMiddleware, JogadorController.criar);
+app.get('/jogadores', authMiddleware, JogadorController.listar);
+app.put('/jogadores/:id', authMiddleware, JogadorController.atualizar);
+app.delete('/jogadores/:id', authMiddleware, JogadorController.excluir);
 
 const PartidaController = require('./controllers/PartidaController');
 
-app.post('/partidas', PartidaController.criar);
-app.get('/partidas', PartidaController.listar);
-app.put('/partidas/:id', PartidaController.atualizar); 
-app.delete('/partidas/:id', PartidaController.excluir);
+app.post('/partidas', authMiddleware, PartidaController.criar);
+app.get('/partidas', authMiddleware, PartidaController.listar);
+app.put('/partidas/:id', authMiddleware, PartidaController.atualizar); 
+app.delete('/partidas/:id', authMiddleware, PartidaController.excluir);
 
 app.get('/', (req, res) => {
     res.json({ mensagem: "API do Campeonato de Tênis de Mesa rodando com sucesso!" });
