@@ -8,7 +8,7 @@ const Partida = require('./models/Partida');
 const User = require('./models/Usuario');
 const authMiddleware = require('./middlewares/authMiddleware');
 
-const app = WebCheck || express(); 
+const app = express(); 
 
 app.use(express.json());
 app.use(cors());       
